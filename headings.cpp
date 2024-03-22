@@ -2,7 +2,7 @@
 using namespace std;
 int main()
 {
-  /*cout << " ---------------------------------------------------------------------------------" << endl;
+  /**/cout << " ---------------------------------------------------------------------------------" << endl;
     cout << "                         #       #####   ######   #####  ######                   " << endl;
     cout << "                        #       #       #        #      #    #                    " << endl;
     cout << "                       #       ####    ######   #      #    #                     " << endl;
@@ -22,14 +22,15 @@ int main()
 	cout << endl << " ----------------------------------LOGIN PORTAL----------------------------------" << endl << endl;
 	cout << endl << " --------------------------------EMPLOYEE PORTAL---------------------------------" << endl << endl;
     cout << "\t\t\t----------------------------------\n";
-    cout << "\t\t\t||\t 1.ADD A CUSTOMER   \t||\n";
-	cout << "\t\t\t||\t 2.DISPLAY          \t||\n";
-	cout << "\t\t\t||\t 3.SEARCH           \t||\n";
-	cout << "\t\t\t||\t 4.BILLING INFO     \t||\n";
-	cout << "\t\t\t||\t 5.UPDATE A TARIFF  \t||\n";
+    cout << "\t\t\t||   1.ADD A CUSTOMER     \t||\n";
+	cout << "\t\t\t||   2.DISPLAY            \t||\n";
+	cout << "\t\t\t||   3.SEARCH             \t||\n";
+	cout << "\t\t\t||   4.UPDATE CNIC EXPIRY DATE\t||\n";
+	cout << "\t\t\t||   5.BILLING INFO       \t||\n";
+	cout << "\t\t\t||   6.UPDATE A TARIFF    \t||\n";
     cout << "\t\t\t----------------------------------\n";
 	cout << endl << " -----------------------ENTER DETAILS FOR A NEW CUSTOMER-------------------------" << endl << endl;
-	cout << endl << " -------------------------ENTER DETAILS FOR A NEW BILL---------------------------" << endl << endl;*/
+	cout << endl << " -------------------------ENTER DETAILS FOR A NEW BILL---------------------------" << endl << endl;
 	cout << endl << " -----------------------------------BILLING--------------------------------------" << endl << endl;
     cout << "\t\t\t------------------------------------------\n";
 	cout << "\t\t\t||\t1.ADD NEW BILL INFO\t\t||\n";
@@ -37,7 +38,7 @@ int main()
 	cout << "\t\t\t||\t3.VIEW A BILL      \t\t||\n";
 	cout << "\t\t\t||\t4.PAY BILL         \t\t||\n";
 	cout << "\t\t\t||\t5.VIEW PAID AND UNPAID BILLS\t||\n";
-	cout << "\t\t\t------------------------------------------\n";/*
+	cout << "\t\t\t------------------------------------------\n";
 	cout << endl << " -------------------------------UPDATING TARIFF----------------------------------" << endl << endl;
     cout << "\t\t\t----------------------------------\n";
 	cout << "\t\t\t||    1.UPDATE INFO        \t||\n";
@@ -62,5 +63,5 @@ int main()
     cout << "\t\t||\t DUE DATE     \t:" << "dd/mm/yyyy"<<"\t\t||\n";
     cout << "\t\t||\t STATUS       \t:" << "status"   << "\t\t\t||\n";
     cout << "\t\t--------------------------------------------------\n";
-    cout << "\t\t--------------------------------------------------\n";*/
+    cout << "\t\t--------------------------------------------------\n";
 }

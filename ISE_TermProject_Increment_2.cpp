@@ -269,7 +269,7 @@ void appendBill()
 	MyfileBill>>search1>>uscnic>>usname>>usaddress>>usphone>>uscustomerType>>usmeterType;
 	if (search1==search){
 	correctPWcheck=true;
-	break;}	}
+	break;}}
 	if (search1!=search){
 	cout<<"Sorry, No RECORD found for ID: "<<search<<endl;
 	correctPWcheck=false;}
@@ -287,6 +287,8 @@ void appendBill()
 	cout<<"Wrong password"<<endl;
 	correctPWcheck=false;}
 	MyfileBill.close();}}
+	else
+	cout<<"File is not open."<<endl;
 	if (correctPWcheck)
 	break;}
     fout<<search<<' ';			//appending new bill info in the BillingInfo file
@@ -587,8 +589,73 @@ void viewBill()
     cout << "\t\t--------------------------------------------------\n";
     cout << "\t\t--------------------------------------------------\n";}
 }
+void paidAndUnpaidBills()
+//function for displaying paid and unpaid bills to employees
+{	
+	char ch;
+	int paid=0, unpaid=0;
+	string compareCode="abc", compareP, compareunP;
+	ifstream fin;
+	ofstream fout,uout;
+	fin.open("BillingInfo.txt",ios::in);
+	fout.open("PaidBills.txt");
+	uout.open("UnpaidBills.txt");
+    int regular,cost;
+	string code, name, month, peak, dday, dmonth, dyear, tax, taxCost, bill, status;
+	if (fin.is_open()){
+	while (!fin.eof()){
+	compareCode=code;
+	fin>>code>>name>>month>>regular>>peak>>dday>>dmonth>>dyear>>tax>>taxCost>>cost>>bill>>status;
+	if (code==compareCode)
+	break;
+	else{
+	if (status=="paid"){
+	paid++;
+	fout<<code<<' '<<name<<endl;}
+	if (status=="unpaid"){
+	unpaid++;
+	uout<<code<<' '<<name<<endl;}}}
+	cout<<endl;
+	cout<<"Amount of paid bills: "<<paid<<endl;
+	cout<<"Amount of unpaid bills: "<<unpaid<<endl;
+	fin.close();}
+	cout<<endl;
+	cout<<"Do you want to see the list of ID for paid and unpaid bills?(enter y): ";
+	cin>>ch;
+	cout<<endl;
+	if (ch=='y'||ch=='Y'){
+	ifstream P,unP;
+	string code;
+	P.open("PaidBills.txt");
+	unP.open("UnpaidBills.txt");
+	cout<<"Customers which have paid the bill"<<endl;
+	cout<<" ID\t Name"<<endl;
+	if (P.is_open()){
+	while (!P.eof()){
+	compareP=code;
+	P>>code>>name;
+	if (code==compareP)
+	break;
+	cout<<code<<'\t'<<name<<endl;}	
+	P.close();}
+	else
+	cout<<"Could not open file."<<endl;
+	cout<<endl;
+	cout<<"Customers which have not paid the bill"<<endl;
+	cout<<" ID\t Name"<<endl;
+	if (unP.is_open()){
+	while (!unP.eof()){
+	compareunP=code;
+	unP>>code>>name;
+	if (code==compareunP)
+	break;
+	cout<<code<<'\t'<<name<<endl;}	
+	unP.close();}
+	else
+	cout<<"Could not open file."<<endl;}
+}
 void billinginfo()
-//function for appending, displaying, viewing or paying bill
+//function for appending, displaying, viewing or paying bill or paid/unpaid bills
 {
     char ch;
     bool BillingWhile=true;
@@ -596,12 +663,13 @@ void billinginfo()
     {
     int n;
 	cout << endl << " -----------------------------------BILLING--------------------------------------" << endl << endl;
-    cout << "\t\t\t----------------------------------\n";
-	cout << "\t\t\t||\t1.ADD NEW BILL INFO\t||\n";
-	cout << "\t\t\t||\t2.DISPLAY BILL INFO\t||\n";
-	cout << "\t\t\t||\t3.VIEW A BILL      \t||\n";
-	cout << "\t\t\t||\t4.PAY BILL         \t||\n";
-	cout << "\t\t\t----------------------------------\n";
+    cout << "\t\t\t------------------------------------------\n";
+	cout << "\t\t\t||\t1.ADD NEW BILL INFO\t\t||\n";
+	cout << "\t\t\t||\t2.DISPLAY BILL INFO\t\t||\n";
+	cout << "\t\t\t||\t3.VIEW A BILL      \t\t||\n";
+	cout << "\t\t\t||\t4.PAY BILL         \t\t||\n";
+	cout << "\t\t\t||\t5.VIEW PAID AND UNPAID BILLS\t||\n";
+	cout << "\t\t\t------------------------------------------\n";
         while (!0){
 		cout << "Make a choice: ";
         cin >> n;
@@ -619,6 +687,9 @@ void billinginfo()
         case 4:
             payBill();
             break;
+        case 5:
+        	paidAndUnpaidBills();
+        	break;
         default:
         	BillingWhile=false;
             cout << "Invalid Choice\n";
@@ -750,6 +821,300 @@ void showTariffFile()
 	break;}
 	fin.close();}
 }
+bool expiryInNext30Days(string expiryDate)
+//function for checking expiry in next 30 days
+{
+	bool check;
+	int date;
+	char month[2];
+	char year[3];
+	int compareDate;
+	month[0]=expiryDate[3];
+	month[1]=expiryDate[4];
+	month[2]=expiryDate[5];
+	year[0]=expiryDate[6];
+	year[1]=expiryDate[7];
+	year[2]=expiryDate[8];
+	year[3]=expiryDate[9];
+	ofstream o;
+	o.open("dt.txt");
+	o<<expiryDate[0]<<expiryDate[1]<<endl;
+	o.close();
+	ifstream i;
+	i.open("dt.txt");
+	i>>date;
+	int dt;
+	string mo,yr,nextMo;
+	ifstream fin;
+	ofstream fout;
+	fout.open("Date.txt");
+	fout<<__DATE__<<endl;
+	fout.close();
+	fin.open("date.txt");
+	fin>>mo>>dt>>yr;
+	if (mo=="Jan"){
+	mo="01";
+	nextMo="02";}
+	else if (mo=="Feb"){
+	mo="02";
+	nextMo="03";}
+	else if (mo=="Mar"){
+	mo="03";
+	nextMo="04";}
+	else if (mo=="Apr"){
+	mo="04";
+	nextMo="05";}
+	else if (mo=="May"){
+	mo="05";
+	nextMo="06";}
+	else if (mo=="Jun"){
+	mo="06";
+	nextMo="07";}
+	else if (mo=="Jul"){
+	mo="07";
+	nextMo="08";}
+	else if (mo=="Aug"){
+	mo="08";
+	nextMo="09";}
+	else if (mo=="Sep"){
+	mo="09";
+	nextMo="10";}
+	else if (mo=="Oct"){
+	mo="10";
+	nextMo="11";}
+	else if (mo=="Nov"){
+	mo="11";
+	nextMo="12";}
+	else if (mo=="Dec"){
+	mo="12";
+	nextMo="01";}
+	if (yr==year){
+	compareDate=dt;
+	for (int i=0; i<30; i++){
+	compareDate=compareDate+1;
+	if (compareDate>30)
+	compareDate=1;
+	if (date>dt && date==compareDate && (month[0]==mo[0] && month[1]==mo[1])){
+	check=true;
+	break;}
+	else if (date<=dt && date==compareDate && (month[0]==nextMo[0] && month[1]==nextMo[1])){
+	check=true;
+	break;}
+	else
+	check=false;}
+	if (check)
+	return true;
+	else
+	return false;}
+	else
+	return false;
+}
+void viewAllExpiryDates()
+//function for all expiry dates with user cnic
+{
+	string cnic,issueDate,expiryDate,compareNic;
+	ifstream fin;
+	fin.open("NADRADB.txt");
+	if (fin.is_open()){
+	cout<<endl;
+	cout<<"Showing all CNICs and their Expiry dates respectively"<<endl;
+	cout<<"    CNIC   \tEXPIRY DATE"<<endl;
+	while (!fin.eof()){
+	compareNic=cnic;
+	fin>>cnic>>issueDate>>expiryDate;
+	if (cnic==compareNic)
+	break;
+	else
+	cout<<cnic<<'\t'<<expiryDate<<endl;}
+	fin.close();}
+	else
+	cout<<"Could not open file."<<endl;
+}
+void closeExpiryDates()
+//function for viewing cnic(s) whose expiry date is close
+{
+	
+	string cnic,issueDate,expiryDate,compareNic;
+	ifstream fin;
+	fin.open("NADRADB.txt");
+	if (fin.is_open()){
+	cout<<endl;
+	cout<<"Showing report of customers whose CNIC is about to expire in next 30 days"<<endl;
+	while (!fin.eof()){
+	compareNic=cnic;
+	fin>>cnic>>issueDate>>expiryDate;
+	if (cnic==compareNic)
+	break;
+	if (expiryInNext30Days(expiryDate)){
+	char ch;
+	string id,nic,name,address,ph,ctype,mtype;
+	ifstream in;
+	in.open("CustomersInfo.txt");
+	if (in.is_open()){
+	while(!in.eof()){
+	in>>id>>nic>>name>>address>>ph>>ctype>>mtype;
+	if(cnic==nic)
+	break;}
+	in.close();}
+	else
+	cout<<"Could not open file."<<endl;
+	cout<<"    CNIC   \tEXPIRY DATE"<<endl;
+	cout<<cnic<<'\t'<<expiryDate<<endl;
+	if (cnic==nic){
+	cout<<"Do you want to view customer's detail?(enter y) ";
+	cin>>ch;
+	if(ch=='y'||ch=='Y'){
+	cout<<endl;
+	cout<<"Customer ID: "<<id<<endl;
+	cout<<"Name: "<<name<<endl;
+	cout<<"Address: "<<address<<endl;
+	cout<<"Phone number: "<<ph<<endl;
+	cout<<"Customer Type: "<<ctype<<endl;
+	cout<<"Meter Type: "<<mtype<<endl;
+	cout<<endl;
+	}}
+	else if(cnic!=nic)
+	cout<<"No customer found for this cnic."<<endl;}}
+	fin.close();}
+	else
+	cout<<"Could not open file."<<endl;
+}
+void updateCnicExpiryDate()
+//function for updating the cnic's expiry date
+{
+	char ch;
+	string search,id,cnic,nic,CNIC,name,address,phNumber,ctype,mtype,issueDate,expiryDate,prevDate,dt,mo,yr;
+	bool idCheck=false, nicCheck=false;
+	ifstream fin;
+	fin.open("customersInfo.txt");
+	cout<<"Enter customer ID: ";
+	cin>>search;
+	if (fin.is_open()){
+	while (!fin.eof()){
+	fin>>id>>nic>>name>>address>>phNumber>>ctype>>mtype;
+	if (search==id){
+	idCheck=true;
+	break;}}
+	if (search!=id){
+	idCheck=false;
+	cout<<"Sorry, no record found for ID: "<<search<<endl;}
+	if (idCheck){
+	while(!0){
+	cout<<"Enter CNIC: ";
+	cin>>cnic;
+	if (cnic!=nic){
+	nicCheck=false;
+	cout<<"You entered a wrong CNIC."<<endl;}
+	else if (cnic==nic)
+	nicCheck=true;
+	if (nicCheck)
+	break;}}
+	fin.close();}
+	else
+	cout<<"Could not open file."<<endl;
+	if (idCheck && nicCheck){
+	ifstream myfile;
+	myfile.open("NADRADB.txt");
+	if (myfile.is_open()){
+	while (!myfile.eof()){
+	myfile>>CNIC>>issueDate>>expiryDate;
+	if(CNIC==cnic)
+	break;}
+	cout<<endl;
+	cout<<"Customer's ID: "<<id<<endl;
+	cout<<"Name: "<<name<<endl;
+	cout<<"CNIC: "<<CNIC<<endl;
+	cout<<"Issue Date: "<<issueDate<<endl;
+	cout<<"Expiry Date: "<<expiryDate<<endl;
+	prevDate=expiryDate;
+	myfile.close();}
+	else
+	cout<<"Could not open file."<<endl;
+	cout<<endl;
+	cout<<"Do you want to update expiry date?(enter y): ";
+	cin>>ch;
+	cout<<endl;
+	if (ch=='y'||ch=='Y'){
+	string compareNic="abc";
+	ifstream in;
+	ofstream out;
+	in.open("NADRADB.txt");
+	out.open("TemporaryNADRADB.txt");
+	if (in.is_open()){
+	while(!in.eof()){
+	in>>CNIC>>issueDate>>expiryDate;
+	if (CNIC==cnic){
+	cout<<"Enter new expiry date(dd/mm/yyyy)"<<endl;
+	cout<<"Date: ";
+	cin>>dt;
+	cout<<"Month: ";
+	cin>>mo;
+	cout<<"Year: ";
+	cin>>yr;
+	out<<CNIC<<' '<<issueDate<<' '<<dt<<'/'<<mo<<'/'<<yr<<endl;}
+	else
+	out<<CNIC<<' '<<issueDate<<' '<<expiryDate<<endl;}
+	in.close();}
+	else
+	cout<<"Could not open file."<<endl;
+	ifstream i;
+	ofstream o;
+	i.open("TemporaryNADRADB.txt");
+	o.open("NADRADB.txt");
+	if (i.is_open()){
+	while(!i.eof()){
+	compareNic=CNIC;
+	i>>CNIC>>issueDate>>expiryDate;
+	if (CNIC==compareNic)
+	break;
+	else
+	o<<CNIC<<' '<<issueDate<<' '<<expiryDate<<endl;}
+	cout<<"Your expiry date has been updated successfully!"<<endl;
+	cout<<"It was previously "<<prevDate;
+	cout<<" and has been changed to "<<dt<<'/'<<mo<<'/'<<yr<<" now."<<endl;
+	remove("TemporaryNADRADB.txt");
+	i.close();}
+	else
+	cout<<"Could not open file."<<endl;}}
+}
+void cnicExpiry()
+//function for viewing and updating cnic expry dates
+{
+	char ch;
+	bool TariffWhile=true;
+    do
+    {
+    int n;
+	cout << endl << " -------------------------------UPDATING CNIC EXPIRY----------------------------------" << endl << endl;
+    cout << "\t\t\t----------------------------------\n";
+	cout << "\t\t\t||   1.VIEW ALL EXPIRY DATES  \t||\n";
+	cout << "\t\t\t||   2.VIEW CLOSE EXPIRY DATES\t||\n";
+	cout << "\t\t\t||   3.UPDATE CNIC EXPIRY DATE\t||\n";
+	cout << "\t\t\t----------------------------------\n";
+        while(!0){
+		cout<<"Make a choice: ";
+		cin>>n;
+        switch (n)
+        {
+        case 1:
+            viewAllExpiryDates();
+            break;
+        case 2:
+            closeExpiryDates();
+            break;
+        case 3:
+        	updateCnicExpiryDate();
+            break;
+        default:
+        	TariffWhile=false;
+            cout << "Invalid Choice\n";
+        }
+    	if (TariffWhile)
+    	break;}
+        cout << "\nDo you want to continue ?(enter y) : ";
+        cin >> ch;
+    } while (ch == 'Y' || ch == 'y');   
+}
 void updateTariff()
 //function for updating tariffTaxInfo file, displaying update or displaying the whole file
 {
@@ -798,11 +1163,12 @@ void employee()
     int n;
 	cout << endl << " --------------------------------EMPLOYEE PORTAL---------------------------------" << endl << endl;
     cout << "\t\t\t----------------------------------\n";
-    cout << "\t\t\t||\t 1.ADD A CUSTOMER   \t||\n";
-	cout << "\t\t\t||\t 2.DISPLAY          \t||\n";
-	cout << "\t\t\t||\t 3.SEARCH           \t||\n";
-	cout << "\t\t\t||\t 4.BILLING INFO     \t||\n";
-	cout << "\t\t\t||\t 5.UPDATE A TARIFF  \t||\n";
+    cout << "\t\t\t||   1.ADD A CUSTOMER     \t||\n";
+	cout << "\t\t\t||   2.DISPLAY            \t||\n";
+	cout << "\t\t\t||   3.SEARCH             \t||\n";
+	cout << "\t\t\t||   4.CNIC EXPIRY DATES  \t||\n";
+	cout << "\t\t\t||   5.BILLING INFO       \t||\n";
+	cout << "\t\t\t||   6.UPDATE A TARIFF    \t||\n";
     cout << "\t\t\t----------------------------------\n";
         while(!0){
 		cout << "Make a choice: ";
@@ -819,9 +1185,12 @@ void employee()
             searchForRecord();
             break;
         case 4:
+        	cnicExpiry();
+			break;
+        case 5:
             billinginfo();
             break;
-        case 5:
+        case 6:
         	updateTariff();
         	break;
         default:
@@ -1087,4 +1456,3 @@ int main()
     break;}   
     return 0;
 }
-
